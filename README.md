@@ -3,7 +3,7 @@
 A demo Phoenix application to test and showcase FIDO2 authentication using the
 [Wax library](https://github.com/tanguilp/wax).
 
-Screen capture: TODO
+[![Demo screenshot](assets/static/images/demo_screenshot.png)](https://rutube.ru/video/c1d10dbcdea2403e3760e603d6da7ac2/)
 
 ## How to run the demo
 
@@ -36,9 +36,9 @@ This is a standard Phoenix project with 4 controllers and templates for:
 - Register key page
 - Personal page (simulating a private page that is shown after successful authentication)
 
-The following baackends are used for storage:
-- ETS for session storage (session don't survive server restart)
-- DETS for user credential storage
+The following backends are used for storage:
+- ETS for session storage (sessions won't survive server restart)
+- DETS for user credential storage (persistent)
 
 The `WaxDemo.User` provides with convenience functions to deal with stored credentials:
 
