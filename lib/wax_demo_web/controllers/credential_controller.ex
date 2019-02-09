@@ -13,7 +13,6 @@ defmodule WaxDemoWeb.CredentialController do
     else
       challenge =
         Wax.new_authentication_challenge(
-          login,
           Enum.map(cred_ids, fn {_login, cred_id, cose_key} -> {cred_id, cose_key} end),
           []
         )
@@ -27,7 +26,7 @@ defmodule WaxDemoWeb.CredentialController do
         with_webauthn: true,
         challenge: Base.encode64(challenge.bytes),
         rp_id: challenge.rp_id,
-        user: challenge.user,
+        user: login,
         cred_ids: Enum.map(cred_ids, fn {_login, cred_id, _cose_key} -> cred_id end)
       )
     end
