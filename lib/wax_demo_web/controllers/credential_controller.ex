@@ -12,7 +12,7 @@ defmodule WaxDemoWeb.CredentialController do
       render(conn, "credential.html", login: login, with_webauthn: false)
     else
       challenge =
-        Wax.authentication_challenge(
+        Wax.new_authentication_challenge(
           login,
           Enum.map(cred_ids, fn {_login, cred_id, cose_key} -> {cred_id, cose_key} end),
           []

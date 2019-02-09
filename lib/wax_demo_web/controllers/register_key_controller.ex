@@ -6,7 +6,7 @@ defmodule WaxDemoWeb.RegisterKeyController do
   def index(conn, _params) do
     case get_session(conn, :login) do
       login when is_binary(login) ->
-        challenge = Wax.new_credential_challenge(login, [])
+        challenge = Wax.new_registration_challenge(login, [])
 
         Logger.debug("Wax: generated attestation challenge #{inspect(challenge)}")
 
@@ -36,7 +36,7 @@ defmodule WaxDemoWeb.RegisterKeyController do
 
     attestation_object = Base.decode64!(attestation_object_b64)
 
-    case Wax.new_credential_verify(attestation_object, client_data_json, challenge) do
+    case Wax.register(attestation_object, client_data_json, challenge) do
       {:ok, {cose_key, attestation_result}} ->
         Logger.debug(
           "Wax: attestation object validated with cose key #{inspect(cose_key)} " <>
