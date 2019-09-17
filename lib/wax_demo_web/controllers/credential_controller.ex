@@ -48,8 +48,11 @@ defmodule WaxDemoWeb.CredentialController do
     sig = Base.decode64!(sig_b64)
 
     case Wax.authenticate(raw_id_b64, authenticator_data, sig, client_data_json, challenge) do
-      {:ok, _} ->
+      {:ok, _sign_count, auth_data} ->
         Logger.debug("Wax: successful authentication for challenge #{inspect(challenge)}")
+
+        # auth_data.flag_user_present
+        # if auth_data.flag_user_verified 
 
         conn
         |> put_session(:authenticated, true)

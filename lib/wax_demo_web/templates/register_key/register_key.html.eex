@@ -84,7 +84,11 @@ function triggerAttestation(){
           type: "public-key", alg: -7 // "ES256" IANA COSE Algorithms registry
         }
       ],
-      attestation: attestation_conveyance_preference
+      attestation: attestation_conveyance_preference,
+      // https://w3c.github.io/webauthn/#authenticatorSelection
+      authenticatorSelection: {
+        userVerification: "preferred"
+      }
     }
   }).then(function (newCredential) {
     document.getElementById('rawID').value = _arrayBufferToBase64(newCredential.rawId);
