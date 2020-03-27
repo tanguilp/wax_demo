@@ -37,15 +37,19 @@ defmodule WaxDemoWeb.RegisterKeyController do
     attestation_object = Base.decode64!(attestation_object_b64)
 
     case Wax.register(attestation_object, client_data_json, challenge) do
-      {:ok, {cose_key, attestation_result}} ->
+      {:ok, {authenticator_data, result}} ->
         Logger.debug(
-          "Wax: attestation object validated with cose key #{inspect(cose_key)} " <>
-            " and attestation result #{inspect(attestation_result)}"
+          "Wax: attestation object validated with result #{inspect(result)} " <>
+            " and authenticator data #{inspect(authenticator_data)}"
         )
 
         user = get_session(conn, :login)
 
-        WaxDemo.User.register_new_cose_key(user, raw_id_b64, cose_key)
+        WaxDemo.User.register_new_cose_key(
+          user,
+          raw_id_b64,
+          authenticator_data.attested_credential_data.credential_public_key
+        )
 
         conn
         |> put_flash(:info, "Key registered")

@@ -11,7 +11,7 @@
     <%= for {_, credential_id, cose_key} <- @keys do %>
     <tr>
       <td><%= String.slice(credential_id, 0..26) %>...</td>
-      <td><%= inspect(Wax.CoseKey.pretty_map(cose_key)) %></td>
+      <td><%= inspect(cose_key) %></td>
     </tr>
     <% end %>
   </table>

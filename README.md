@@ -7,10 +7,12 @@ A demo Phoenix application to test and showcase FIDO2 authentication using the
 
 ## How to run the demo
 
-First Launch the application
+Run the following commands
 
 ```bash
-$ iex -S mix phx.server
+mix deps.get
+cd assets && npm install && node node_modules/webpack/bin/webpack.js --mode development && cd ..
+iex -S mix phx.server
 ```
 
 and then browse [http://localhost:4000](http://localhost:4000)
