@@ -3,7 +3,7 @@
 A demo Phoenix application to test and showcase FIDO2 authentication using the
 [Wax library](https://github.com/tanguilp/wax).
 
-[![Demo screenshot](assets/static/images/demo_screenshot.png)](https://rutube.ru/video/c1d10dbcdea2403e3760e603d6da7ac2/)
+[![Demo screenshot](assets/static/images/demo_screenshot.png)](https://vimeo.com/358361625)
 
 ## How to run the demo
 
