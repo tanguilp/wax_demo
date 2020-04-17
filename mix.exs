@@ -39,7 +39,7 @@ defmodule WaxDemo.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:wax, github: "tanguilp/wax", ref: "4881ac59d232ffb43e8d501a7864dca48fb0fc38"}
+      {:wax, github: "tanguilp/wax", tag: "v0.2.0"}
     ]
   end
 end
