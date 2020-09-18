@@ -66,7 +66,7 @@ config :phoenix, :stacktrace_depth, 20
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
 
-config :wax,
+config :wax_,
   origin: "http://localhost:4000",
   rp_id: :auto,
   metadata_update_interval: 3600,
