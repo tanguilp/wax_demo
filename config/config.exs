@@ -12,7 +12,7 @@ config :wax_demo, WaxDemoWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "FqtrYw9td60pRQTNYgNjw8+HXlK44wdyUL8G4gUXad7bbCsfCcIXpHL1LGXVWJsc",
   render_errors: [view: WaxDemoWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: WaxDemo.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub_server: WaxDemo.PubSub
 
 # Configures Elixir's Logger
 config :logger, :console,
