@@ -1,9 +1,16 @@
 defmodule WaxDemoWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :wax_demo
 
-  socket "/socket", WaxDemoWeb.UserSocket,
-    websocket: true,
-    longpoll: false
+  # The session will be stored in the cookie and signed,
+  # this means its contents can be read but not tampered with.
+  # Set :encryption_salt if you would also like to encrypt it.
+  @session_options [
+    store: :cookie,
+    key: "_wax_demo_key",
+    signing_salt: "TTWG5Rnv"
+  ]
+
+  # socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -13,7 +20,7 @@ defmodule WaxDemoWeb.Endpoint do
     at: "/",
     from: :wax_demo,
     gzip: false,
-    only: ~w(css fonts images js favicon.ico robots.txt)
+    only: ~w(assets fonts images favicon.ico robots.txt)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
@@ -24,7 +31,7 @@ defmodule WaxDemoWeb.Endpoint do
   end
 
   plug Plug.RequestId
-  plug Plug.Logger
+  plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
@@ -33,11 +40,6 @@ defmodule WaxDemoWeb.Endpoint do
 
   plug Plug.MethodOverride
   plug Plug.Head
-
-  plug Plug.Session,
-    store: :ets,
-    key: "sid",
-    table: :wax_session
-
+  plug Plug.Session, @session_options
   plug WaxDemoWeb.Router
 end

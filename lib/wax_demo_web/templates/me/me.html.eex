@@ -1,5 +1,5 @@
 <section class="phx-hero">
-  <h1><%= gettext "Welcome to Wax!" %></h1>
+  <h1>Welcome to Wax!</h1>
   <p>Hello <em><%= @login %></em>!</p>
 </section>
 

@@ -1,5 +1,5 @@
 <section class="phx-hero">
-  <h1><%= gettext "Register a new security key" %></h1>
+  <h1>Register a new security key</h1>
   <img src="<%= Routes.static_path(@conn, "/images/fingerprint-scanning.svg") %>"/><br/>
   <p><em><%= String.capitalize(@login) %></em>, press your authenticator now!</p>
 </section>

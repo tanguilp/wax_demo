@@ -21,7 +21,10 @@ defmodule WaxDemo.User do
   def print_keys() do
     :dets.traverse(
       @table,
-      fn entry -> IO.inspect(entry); :continue end
+      fn entry ->
+        IO.inspect(entry)
+        :continue
+      end
     )
   end
 
