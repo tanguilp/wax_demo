@@ -61,12 +61,6 @@ function triggerAttestation(){
   document.getElementById('safari-button').style.display = 'none';
   document.getElementById('auth-img').style.display = 'inline';
 
-  <%= if @login == String.reverse(@login) do %>
-    var attestation_conveyance_preference = "direct";
-  <% else %>
-    var attestation_conveyance_preference = "none";
-  <% end %>
-
   challenge = _base64ToArrayBuffer(challenge_b64);
 
   navigator.credentials.create({
@@ -88,7 +82,7 @@ function triggerAttestation(){
           type: "public-key", alg: -7 // "ES256" IANA COSE Algorithms registry
         }
       ],
-      attestation: attestation_conveyance_preference
+        attestation: "<%= @attestation %>"
     }
   }).then(function (newCredential) {
     document.getElementById('rawID').value = _arrayBufferToBase64(newCredential.rawId);

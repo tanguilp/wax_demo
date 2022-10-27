@@ -6,7 +6,9 @@ defmodule WaxDemoWeb.RegisterKeyController do
   def index(conn, _params) do
     case get_session(conn, :login) do
       login when is_binary(login) ->
-        challenge = Wax.new_registration_challenge([])
+        opts = if login == String.reverse(login), do: [attestation: "direct"], else: []
+
+        challenge = Wax.new_registration_challenge(opts)
 
         Logger.debug("Wax: generated attestation challenge #{inspect(challenge)}")
 
@@ -16,7 +18,8 @@ defmodule WaxDemoWeb.RegisterKeyController do
           login: get_session(conn, :login),
           challenge: Base.encode64(challenge.bytes),
           rp_id: challenge.rp_id,
-          user: login
+          user: login,
+          attestation: challenge.attestation
         )
 
       nil ->
