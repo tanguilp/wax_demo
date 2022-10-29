@@ -58,11 +58,11 @@ defmodule WaxDemoWeb.RegisterKeyController do
         |> put_flash(:info, "Key registered")
         |> redirect(to: "/me")
 
-      {:error, _} = error ->
+      {:error, e} = error ->
         Logger.debug("Wax: attestation object validation failed with error #{inspect(error)}")
 
         conn
-        |> put_flash(:error, "Key registration failed")
+        |> put_flash(:error, "Key registration failed (#{Exception.message(e)})")
         |> index(%{})
     end
   end
