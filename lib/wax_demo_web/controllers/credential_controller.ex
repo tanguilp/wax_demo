@@ -52,7 +52,14 @@ defmodule WaxDemoWeb.CredentialController do
     authenticator_data_raw = Base.decode64!(authenticator_data_b64)
     sig_raw = Base.decode64!(sig_b64)
 
-    with {:ok, _} <- Wax.authenticate(credential_id, authenticator_data_raw, sig_raw, client_data_json, challenge),
+    with {:ok, _} <-
+           Wax.authenticate(
+             credential_id,
+             authenticator_data_raw,
+             sig_raw,
+             client_data_json,
+             challenge
+           ),
          :ok <- check_authenticator_status(credential_id, cred_id_aaguid_mapping, challenge) do
       Logger.debug("Wax: successful authentication for challenge #{inspect(challenge)}")
 
@@ -60,9 +67,8 @@ defmodule WaxDemoWeb.CredentialController do
       |> put_session(:authenticated, true)
       |> put_flash(:info, "Successfully authenticated with WebAuthn")
       |> redirect(to: "/me")
-
     else
-      {:error, e}->
+      {:error, e} ->
         conn
         |> put_flash(:error, "Authentication failed (error: #{Exception.message(e)})")
         |> index(%{})
