@@ -48,10 +48,13 @@ defmodule WaxDemoWeb.RegisterKeyController do
 
         user = get_session(conn, :login)
 
+        maybe_aaguid = Wax.AuthenticatorData.get_aaguid(authenticator_data)
+
         WaxDemo.User.register_new_cose_key(
           user,
           raw_id_b64,
-          authenticator_data.attested_credential_data.credential_public_key
+          authenticator_data.attested_credential_data.credential_public_key,
+          maybe_aaguid
         )
 
         conn
