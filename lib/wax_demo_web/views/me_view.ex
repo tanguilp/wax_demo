@@ -8,11 +8,15 @@ defmodule WaxDemoWeb.MeView do
   end
 
   def icon_for_authenticator(aaguid) do
-    {:ok, metadata} = Wax.Metadata.get_by_aaguid(aaguid)
+    case Wax.Metadata.get_by_aaguid(aaguid) do
+      {:ok, metadata} ->
+        icon = metadata["icon"] || @unknown_icon
+        model = metadata["description"] || "Unknown"
 
-    icon = metadata["icon"] || @unknown_icon
-    model = metadata["description"] || "Unknown"
+        Phoenix.HTML.raw(~s|<img src="#{icon}"/><br/>#{model}|)
 
-    Phoenix.HTML.raw(~s|<img src="#{icon}"/><br/>#{model}|)
+      {:error, _} ->
+        icon_for_authenticator(nil)
+    end
   end
 end
