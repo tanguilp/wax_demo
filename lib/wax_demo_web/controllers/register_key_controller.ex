@@ -6,7 +6,16 @@ defmodule WaxDemoWeb.RegisterKeyController do
   def index(conn, _params) do
     case get_session(conn, :login) do
       login when is_binary(login) ->
-        opts = if login == String.reverse(login), do: [attestation: "direct"], else: []
+        opts =
+          if login == String.reverse(login),
+            do: [
+              attestation: "direct",
+              trusted_attestation_types: [:basic, :uncertain, :attca, :anonca],
+              # Disable to make it work with Chrome Virtual Authenticator
+              # Do not disable it if you don't know what you're doing!!!!
+              verify_trust_root: false
+            ],
+            else: []
 
         challenge = Wax.new_registration_challenge(opts)
 
