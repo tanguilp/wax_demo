@@ -52,7 +52,7 @@ defmodule WaxDemoWeb.CredentialController do
     authenticator_data_raw = Base.decode64!(authenticator_data_b64)
     sig_raw = Base.decode64!(sig_b64)
 
-    with {:ok, authenticator_data} <-
+    with {:ok, _} <-
            Wax.authenticate(
              credential_id,
              authenticator_data_raw,
@@ -61,10 +61,7 @@ defmodule WaxDemoWeb.CredentialController do
              challenge
            ),
          :ok <- check_authenticator_status(credential_id, cred_id_aaguid_mapping, challenge) do
-      Logger.debug("""
-      Wax: successful authentication for challenge #{inspect(challenge)}
-      with authenticator data #{inspect(authenticator_data)}
-      """)
+      Logger.debug("Wax: successful authentication for challenge #{inspect(challenge)}")
 
       conn
       |> put_session(:authenticated, true)
