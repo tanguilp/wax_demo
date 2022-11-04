@@ -66,5 +66,6 @@ config :phoenix, :plug_init_mode, :runtime
 config :wax_,
   origin: "http://localhost:4000",
   rp_id: :auto,
-  metadata_update_interval: 3600,
-  allowed_attestation_types: [:basic, :uncertain, :attca, :self]
+  update_metadata: true,
+  allowed_attestation_types: [:basic, :uncertain, :attca, :self],
+  metadata_dir: "priv/fido2_metadata/"

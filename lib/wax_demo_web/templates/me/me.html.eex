@@ -7,11 +7,12 @@
   <h2>Your registered keys</h2>
 
   <table>
-    <tr><td>Credential ID</td><td>Cose key</td></tr>
-    <%= for {_, credential_id, cose_key} <- @keys do %>
+    <tr><th>Credential ID</th><th>Cose key</th><th>Authenticator model</th></tr>
+    <%= for {_, credential_id, cose_key, maybe_aaguid} <- @keys do %>
     <tr>
       <td><%= String.slice(credential_id, 0..26) %>...</td>
       <td><%= inspect(cose_key) %></td>
+      <td><%= icon_for_authenticator(maybe_aaguid) %></td>
     </tr>
     <% end %>
   </table>

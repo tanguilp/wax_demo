@@ -8,8 +8,6 @@ defmodule WaxDemo.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      WaxDemoWeb.Telemetry,
-      # Start the PubSub system
       {Phoenix.PubSub, name: WaxDemo.PubSub},
       # Start the Endpoint (http/https)
       WaxDemoWeb.Endpoint

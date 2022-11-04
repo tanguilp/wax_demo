@@ -13,21 +13,26 @@ defmodule WaxDemoWeb.CredentialController do
     else
       challenge =
         Wax.new_authentication_challenge(
-          Enum.map(cred_ids, fn {_login, cred_id, cose_key} -> {cred_id, cose_key} end),
-          []
+          Enum.map(cred_ids, fn {_login, cred_id, cose_key, _} -> {cred_id, cose_key} end)
         )
+
+      cred_id_aaguid_mapping =
+        for {_login, cred_id, _cose_key, maybe_aaguid} <- cred_ids, into: %{} do
+          {cred_id, maybe_aaguid}
+        end
 
       Logger.debug("Wax: generated authentication challenge #{inspect(challenge)}")
 
       conn
       |> put_session(:authentication_challenge, challenge)
+      |> put_session(:cred_id_aaguid_mapping, cred_id_aaguid_mapping)
       |> render("credential.html",
         login: login,
         with_webauthn: true,
         challenge: Base.encode64(challenge.bytes),
         rp_id: challenge.rp_id,
         user: login,
-        cred_ids: Enum.map(cred_ids, fn {_login, cred_id, _cose_key} -> cred_id end)
+        cred_ids: Enum.map(cred_ids, fn {_login, cred_id, _cose_key, _} -> cred_id end)
       )
     end
   end
@@ -37,30 +42,35 @@ defmodule WaxDemoWeb.CredentialController do
           "clientDataJSON" => client_data_json,
           "authenticatorData" => authenticator_data_b64,
           "sig" => sig_b64,
-          "rawID" => raw_id_b64,
+          "rawID" => credential_id,
           "type" => "public-key"
         }
       }) do
     challenge = get_session(conn, :authentication_challenge)
+    cred_id_aaguid_mapping = get_session(conn, :cred_id_aaguid_mapping)
 
-    authenticator_data = Base.decode64!(authenticator_data_b64)
+    authenticator_data_raw = Base.decode64!(authenticator_data_b64)
+    sig_raw = Base.decode64!(sig_b64)
 
-    sig = Base.decode64!(sig_b64)
+    with {:ok, _} <-
+           Wax.authenticate(
+             credential_id,
+             authenticator_data_raw,
+             sig_raw,
+             client_data_json,
+             challenge
+           ),
+         :ok <- check_authenticator_status(credential_id, cred_id_aaguid_mapping, challenge) do
+      Logger.debug("Wax: successful authentication for challenge #{inspect(challenge)}")
 
-    case Wax.authenticate(raw_id_b64, authenticator_data, sig, client_data_json, challenge) do
-      {:ok, _} ->
-        Logger.debug("Wax: successful authentication for challenge #{inspect(challenge)}")
-
+      conn
+      |> put_session(:authenticated, true)
+      |> put_flash(:info, "Successfully authenticated with WebAuthn")
+      |> redirect(to: "/me")
+    else
+      {:error, e} ->
         conn
-        |> put_session(:authenticated, true)
-        |> put_flash(:info, "Successfully authenticated with WebAuthn")
-        |> redirect(to: "/me")
-
-      {:error, _} = error ->
-        Logger.debug("Wax: authentication failed with error #{inspect(error)}")
-
-        conn
-        |> put_flash(:error, "Authentication failed. Try another authenticator or fill password")
+        |> put_flash(:error, "Authentication failed (error: #{Exception.message(e)})")
         |> index(%{})
     end
   end
@@ -90,5 +100,21 @@ defmodule WaxDemoWeb.CredentialController do
     conn
     |> put_flash(:error, "Invalid password. Have a coffe, and try again")
     |> index(%{})
+  end
+
+  defp check_authenticator_status(credential_id, cred_id_aaguid_mapping, challenge) do
+    case cred_id_aaguid_mapping[credential_id] do
+      nil ->
+        :ok
+
+      aaguid ->
+        case Wax.Metadata.get_by_aaguid(aaguid, challenge) do
+          {:ok, _} ->
+            :ok
+
+          {:error, _} = error ->
+            error
+        end
+    end
   end
 end
