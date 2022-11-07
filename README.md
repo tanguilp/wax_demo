@@ -5,6 +5,10 @@ A demo Phoenix application to test and showcase FIDO2 authentication using the
 
 [![Demo screenshot](assets/static/images/demo_screenshot.png)](https://vimeo.com/358361625)
 
+Using discoverable credentials (*resident keys*), that is loginless login:
+
+[![Demo screenshot](assets/static/images/rk_screenshot.png)](https://vimeo.com/768181493)
+
 ## How to run the demo
 
 Run the following commands
