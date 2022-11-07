@@ -63,6 +63,8 @@ function triggerAttestation(){
 
   challenge = _base64ToArrayBuffer(challenge_b64);
 
+  user_id = new Uint8Array(16);
+
   navigator.credentials.create({
     publicKey: {
       // random, cryptographically secure, at least 16 bytes
@@ -82,7 +84,10 @@ function triggerAttestation(){
           type: "public-key", alg: -7 // "ES256" IANA COSE Algorithms registry
         }
       ],
-        attestation: "<%= @attestation %>"
+       attestation: "<%= @attestation %>"//,
+      //authenticatorSelection: {
+      //  residentKey: 'required'
+      //}
     }
   }).then(function (newCredential) {
     document.getElementById('rawID').value = _arrayBufferToBase64(newCredential.rawId);

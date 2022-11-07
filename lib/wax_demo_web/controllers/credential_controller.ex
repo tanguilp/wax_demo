@@ -6,18 +6,20 @@ defmodule WaxDemoWeb.CredentialController do
   def index(conn, _params) do
     login = get_session(conn, :login)
 
-    cred_ids = WaxDemo.User.get_keys(login)
+    cred_ids = WaxDemo.User.get_by_username(login)
 
     if cred_ids == [] do
       render(conn, "credential.html", login: login, with_webauthn: false)
     else
       challenge =
         Wax.new_authentication_challenge(
-          Enum.map(cred_ids, fn {_login, cred_id, cose_key, _} -> {cred_id, cose_key} end)
+          Enum.map(cred_ids, fn {_user_id, _login, cred_id, cose_key, _} ->
+            {cred_id, cose_key}
+          end)
         )
 
       cred_id_aaguid_mapping =
-        for {_login, cred_id, _cose_key, maybe_aaguid} <- cred_ids, into: %{} do
+        for {_user_id, _login, cred_id, _cose_key, maybe_aaguid} <- cred_ids, into: %{} do
           {cred_id, maybe_aaguid}
         end
 
@@ -32,7 +34,7 @@ defmodule WaxDemoWeb.CredentialController do
         challenge: Base.encode64(challenge.bytes),
         rp_id: challenge.rp_id,
         user: login,
-        cred_ids: Enum.map(cred_ids, fn {_login, cred_id, _cose_key, _} -> cred_id end)
+        cred_ids: Enum.map(cred_ids, fn {_user_id, _login, cred_id, _cose_key, _} -> cred_id end)
       )
     end
   end

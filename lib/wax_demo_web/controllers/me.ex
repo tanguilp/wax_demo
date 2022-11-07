@@ -12,7 +12,7 @@ defmodule WaxDemoWeb.MeController do
     if get_session(conn, :authenticated) do
       login = get_session(conn, :login)
 
-      keys = WaxDemo.User.get_keys(login)
+      keys = WaxDemo.User.get_by_username(login)
 
       render(conn, "me.html", login: login, keys: keys)
     else

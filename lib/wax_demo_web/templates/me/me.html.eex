@@ -8,7 +8,7 @@
 
   <table>
     <tr><th>Credential ID</th><th>Cose key</th><th>Authenticator model</th></tr>
-    <%= for {_, credential_id, cose_key, maybe_aaguid} <- @keys do %>
+    <%= for {_, _, credential_id, cose_key, maybe_aaguid} <- @keys do %>
     <tr>
       <td><%= String.slice(credential_id, 0..26) %>...</td>
       <td><%= inspect(cose_key) %></td>
