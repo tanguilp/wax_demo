@@ -21,6 +21,9 @@ defmodule WaxDemoWeb.RegisterKeyController do
 
         Logger.debug("Wax: generated attestation challenge #{inspect(challenge)}")
 
+        # A new user id is generated for each credential
+        # In a real world scenario, we'd want a unique user id per user,
+        # but this is a demo (!!!) and unique identifier is the login
         user_id = :crypto.strong_rand_bytes(64)
 
         conn
