@@ -10,4 +10,10 @@
     <%= submit "Next" %>
   <% end %>
   </p>
+  <hr/>
+  <p style="text-align:center">
+  or<br/>
+  <a class="button" href="/credential">Login with passkey
+  <img style="height:30px; vertical-align:middle" id="auth-img" src="<%= Routes.static_path(@conn, "/images/fingerprint-white.png") %>"/></a>
+  </p>
 </section>

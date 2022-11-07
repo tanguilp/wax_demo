@@ -21,13 +21,20 @@ defmodule WaxDemoWeb.RegisterKeyController do
 
         Logger.debug("Wax: generated attestation challenge #{inspect(challenge)}")
 
+        # A new user id is generated for each credential
+        # In a real world scenario, we'd want a unique user id per user,
+        # but this is a demo (!!!) and unique identifier is the login
+        user_id = :crypto.strong_rand_bytes(64)
+
         conn
         |> put_session(:challenge, challenge)
+        |> put_session(:user_id, user_id)
         |> render("register_key.html",
           login: get_session(conn, :login),
           challenge: Base.encode64(challenge.bytes),
           rp_id: challenge.rp_id,
           user: login,
+          user_id: Base.encode64(user_id),
           attestation: challenge.attestation
         )
 
@@ -56,10 +63,12 @@ defmodule WaxDemoWeb.RegisterKeyController do
         )
 
         user = get_session(conn, :login)
+        user_id = get_session(conn, :user_id)
 
         maybe_aaguid = Wax.AuthenticatorData.get_aaguid(authenticator_data)
 
         WaxDemo.User.register_new_cose_key(
+          user_id,
           user,
           raw_id_b64,
           authenticator_data.attested_credential_data.credential_public_key,

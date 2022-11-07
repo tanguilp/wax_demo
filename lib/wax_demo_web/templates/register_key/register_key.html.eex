@@ -26,6 +26,7 @@
 var challenge_b64 = "<%= @challenge %>";
 var rp_id = "<%= @rp_id %>";
 var user = "<%= @user %>";
+var user_id_b64 = "<%= @user_id %>";
 
 function _arrayBufferToString( buffer ) {
   var binary = '';
@@ -62,6 +63,7 @@ function triggerAttestation(){
   document.getElementById('auth-img').style.display = 'inline';
 
   challenge = _base64ToArrayBuffer(challenge_b64);
+  user_id = _base64ToArrayBuffer(user_id_b64);
 
   navigator.credentials.create({
     publicKey: {
@@ -73,7 +75,7 @@ function triggerAttestation(){
         name: 'Wax FTW'
       },
       user: {
-        id: new Uint8Array(16),
+        id: user_id,
         name: user,
         displayName: user
       },
@@ -82,7 +84,10 @@ function triggerAttestation(){
           type: "public-key", alg: -7 // "ES256" IANA COSE Algorithms registry
         }
       ],
-        attestation: "<%= @attestation %>"
+     attestation: "<%= @attestation %>",
+      authenticatorSelection: {
+        residentKey: 'preferred'
+      }
     }
   }).then(function (newCredential) {
     document.getElementById('rawID').value = _arrayBufferToBase64(newCredential.rawId);

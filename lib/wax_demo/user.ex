@@ -8,14 +8,18 @@ defmodule WaxDemo.User do
     :dets.open_file(@table, [{:type, :bag}])
   end
 
-  def register_new_cose_key(user, key_id, cose_key, maybe_aaguid) do
+  def register_new_cose_key(user_id, user, key_id, cose_key, maybe_aaguid) do
     # FIXME: first check that the key_id is not already in use as per bullet point 18 here:
     # https://www.w3.org/TR/2019/PR-webauthn-20190117/#registering-a-new-credential
-    :dets.insert(@table, {user, key_id, cose_key, maybe_aaguid})
+    :dets.insert(@table, {user_id, user, key_id, cose_key, maybe_aaguid})
   end
 
-  def get_keys(user) do
-    :dets.lookup(@table, user)
+  def get_by_user_id(user_id) do
+    :dets.lookup(@table, user_id)
+  end
+
+  def get_by_username(username) do
+    :dets.select(@table, [{{:_, :"$1", :_, :_, :_}, [{:==, :"$1", username}], [:"$_"]}])
   end
 
   def print_keys() do
