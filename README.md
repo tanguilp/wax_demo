@@ -19,6 +19,8 @@ cd assets && npm install && node node_modules/webpack/bin/webpack.js --mode deve
 iex -S mix phx.server
 ```
 
+Note: in case you are running a recent version of Node and you receive an error like ```Error: error:0308010C:digital envelope routines::unsupported```, you can try to set the ENV variable ```NODE_OPTIONS=--openssl-legacy-provider``` before running the command ```node node_modules/webpack/bin/webpack.js --mode development```
+
 and then browse [http://localhost:4000](http://localhost:4000)
 
 ### Attestation
