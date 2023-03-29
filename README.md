@@ -15,7 +15,7 @@ Run the following commands
 
 ```bash
 mix deps.get
-cd assets && npm install && node node_modules/webpack/bin/webpack.js --mode development && cd ..
+cd assets && npm install && NODE_OPTIONS=--openssl-legacy-provider node node_modules/webpack/bin/webpack.js --mode development && cd ..
 iex -S mix phx.server
 ```
 
